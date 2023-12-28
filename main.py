@@ -64,16 +64,35 @@ running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
-    pygame.draw.rect(screen,"brown", Snake.head)
+            pygame.quit()
+            sys.exit
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_DOWN:
+                Snake.ydir = 1
+                Snake.xdir = 0
+            elif event.key == pygame.K_UP:
+                Snake.ydir = -1
+                Snake.xdir = 0
+            elif event.key == pygame.K_RIGHT:
+                Snake.ydir = 0
+                Snake.xdir = 1
+            elif event.key == pygame.K_LEFT:
+                Snake.ydir = 0
+                Snake.xdir = -1
+            
+    Snake.update()
+
+    screen.fill("green")
+    drawGrid()
+
+    pygame.draw.rect(screen,"brown",Snake.head)
+
     for square in Snake.body:
         pygame.draw.rect(screen,"brown",square)
-    Snake.update()
     
-    clock.tick(10)
     pygame.display.update()
-    
-sys,exit()
-pygame.quit()
+    clock.tick(10)
 
+sys.exit()
+pygame.quit()
 
