@@ -2,6 +2,7 @@ import pygame,random,sys
 pygame.init()
 clock = pygame.time.Clock()
 # screen section
+score = 0
 screen_width = 700
 screen_height = 630
 cell_size = 35
@@ -16,11 +17,13 @@ def drawGrid():
 # Snake initialisation and functions and colisions
 class snake:
     def __init__(self):
+        self.size = 1
+        self.length = cell_size
         self.x,self.y = cell_size,cell_size
         self.xdir = 1
         self.ydir = 0
         self.head = pygame.Rect(self.x,self.y,cell_size,cell_size)
-        self.body = [pygame.Rect(self.x-cell_size,self.y,cell_size,cell_size)]
+        self.body = [pygame.Rect(self.x-cell_size,self.y,self.length,self.length)] 
         self.dead = False    
     def update(self):
         self.body.append(self.head)
@@ -31,6 +34,7 @@ class snake:
         self.head.y += self.ydir * cell_size
         self.body.remove(self.head)
 
+
     
 
     
@@ -40,16 +44,29 @@ class snake:
         
 
 # Fruit 
-red = (235, 52, 52)
-def draw_fruit():
+class fruit:
+    def __init__(self): 
+        self.x,self.y = random.randrange(0,screen_width,cell_size) , random.randrange(0,screen_height,cell_size)
+        self.color = (235, 52, 61)
+        self.size = pygame.Rect(self.x,self.y,cell_size,cell_size)
+
+    def update(self):
+        pygame.draw.rect(screen,"red", self.size)
+        
     
     
-    randx = random.randrange(0,screen_width,cell_size)
-    randy = random.randrange(0,screen_height,cell_size)
-    square = pygame.Rect(randx,randy,cell_size,cell_size)
+            
+        
+            
+            
+
+
+            
+
+        
+        
     
-    pygame.draw.rect(screen,red,square,0)
-    
+         
                     
 
 
@@ -58,7 +75,10 @@ def draw_fruit():
 
 
 # Main loop
+Fruit = fruit()
 Snake = snake()
+
+
 drawGrid()
 running = True
 while running:
@@ -79,16 +99,32 @@ while running:
             elif event.key == pygame.K_LEFT:
                 Snake.ydir = 0
                 Snake.xdir = -1
+        
+        
             
+
     Snake.update()
+    
 
     screen.fill("green")
     drawGrid()
 
-    pygame.draw.rect(screen,"brown",Snake.head)
-
+    Fruit.update()
+    
+    
+    pygame.draw.rect(screen,"blue",Snake.head)
+    
+        
+    
+        
+    
+            
     for square in Snake.body:
-        pygame.draw.rect(screen,"brown",square)
+        pygame.draw.rect(screen,"orange",square)
+
+    if Snake.head.x == Fruit.x and Snake.head.y == Fruit.y:
+        Snake.body.append(pygame.Rect(Snake.head.x,Snake.head.y,cell_size,cell_size))
+        Fruit = fruit()
     
     pygame.display.update()
     clock.tick(10)
