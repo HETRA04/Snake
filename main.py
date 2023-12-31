@@ -34,8 +34,28 @@ class snake:
         self.head.y += self.ydir * cell_size
         self.body.remove(self.head)
 
+        for square in self.body:
+            if self.head.x == square.x and self.head.y == square.y:
+                self.dead = True
+             
 
-    
+        if self.dead:
+            self.x,self.y = cell_size,cell_size
+            self.head = pygame.Rect(self.x,self.y,cell_size,cell_size)
+            self.body = [pygame.Rect(self.x-cell_size,self.y,self.length,self.length)]
+            self.xdir = 1
+            self.ydir = 0
+            self.dead = False
+            Fruit = fruit()
+        
+        
+        
+
+        
+
+        
+
+
 
     
         
@@ -88,17 +108,31 @@ while running:
             sys.exit
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
-                Snake.ydir = 1
-                Snake.xdir = 0
+                if Snake.ydir == -1:
+                    Snake.ydir = -1
+                elif Snake.ydir != 1:
+                    Snake.ydir = 1
+                    Snake.xdir = 0
             elif event.key == pygame.K_UP:
-                Snake.ydir = -1
-                Snake.xdir = 0
+                if Snake.ydir == 1:
+                    Snake.ydir = 1
+                elif Snake.ydir != 1:
+                    Snake.ydir = -1
+                    Snake.xdir = 0
             elif event.key == pygame.K_RIGHT:
-                Snake.ydir = 0
-                Snake.xdir = 1
+                if Snake.xdir == -1:
+                    Snake.xdir = -1
+                elif Snake.xdir != -1:
+                    Snake.ydir = 0
+                    Snake.xdir = 1
             elif event.key == pygame.K_LEFT:
-                Snake.ydir = 0
-                Snake.xdir = -1
+                if Snake.xdir == 1:
+                    Snake.xdir = 1
+                elif Snake.xdir != 1:
+                    Snake.ydir = 0
+                    Snake.xdir = -1
+            
+
         
         
             
@@ -114,10 +148,16 @@ while running:
     
     pygame.draw.rect(screen,"blue",Snake.head)
     
-        
     
-        
+
     
+    if Snake.head.y > screen_height or Snake.head.y < 0:
+        Snake.dead = True
+        
+    if Snake.head.x > screen_width:
+        Snake.head.x = 0
+    elif Snake.head.x < 0:
+        Snake.head.x = screen_width
             
     for square in Snake.body:
         pygame.draw.rect(screen,"orange",square)
